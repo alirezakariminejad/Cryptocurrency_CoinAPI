@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:dio/dio.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,6 +10,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var cryptoName = 'No Name';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCryptoData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +48,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white,
               ),
             ),
+            SizedBox(height: 10.0),
+            loadingPreview(),
+            Text(cryptoName),
           ],
         ),
       ),
     );
+  }
+
+  loadingPreview() {
+    return SpinKitThreeBounce(
+      color: Colors.white,
+      size: 20.0,
+    );
+  }
+
+  getCryptoData() async {
+    var response = await Dio().get('http://api.coincap.io/v2/assets');
+    setState(() {
+      cryptoName = response.data[0]['id'];
+      print('object123');
+    });
   }
 }
