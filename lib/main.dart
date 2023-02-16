@@ -1,3 +1,4 @@
+import 'package:cryptocurrency_coin_api/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,11 +11,9 @@ class Application extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: Text('alireza'),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'LatoRegular'),
+      home: HomeScreen(),
     );
   }
 }
