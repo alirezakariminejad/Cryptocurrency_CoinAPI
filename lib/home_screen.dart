@@ -1,3 +1,5 @@
+import 'package:cryptocurrency_coin_api/coin_list_screen.dart';
+import 'package:cryptocurrency_coin_api/data/model/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:dio/dio.dart';
@@ -10,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var cryptoName = 'No Name';
   @override
   void initState() {
     // TODO: implement initState
@@ -50,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 10.0),
             loadingPreview(),
-            Text(cryptoName),
           ],
         ),
       ),
@@ -65,10 +65,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getCryptoData() async {
-    var response = await Dio().get('http://api.coincap.io/v2/assets');
-    setState(() {
-      cryptoName = response.data[0]['id'];
-      print('object123');
-    });
+    // var response = await Dio().get('https://api.coincap.io/v2/assets');
+    var response = await Dio().get(
+        'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+        options: Options(headers: {
+          'X-CMC_PRO_API_KEY': '2f871351-2590-4396-8e86-a5214d84657f',
+        }));
+    List<Crypto> cryptoList = response.data['data']
+        .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
+        .toList();
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CoinListScreen(cryptoList: cryptoList),
+    ));
   }
 }
